@@ -1,0 +1,45 @@
+<%
+  # Browsers which do not support the `srcdoc` attribute will fall back to
+  # the `src` attribute.
+
+  style = {}
+  style[:height] = comp.height unless comp.height == :auto
+  style = style.compact.map { |a| a.join(': ') }.join('; ')
+
+  preamble = <<~HTML
+    <style>body { margin: 0; }</style>
+  HTML
+
+  if comp.height == :auto
+    # when setting height to :auto, the iframe is automatically resized to fit
+    # its contents.
+    # The scrollbar forcibly hidden in such cases, as the appearance or
+    # disappearance of a vertical scrollbar (e.g., on macOS with a mouse vs.
+    # with a trackpad) with long wrapped documents causes extreme height
+    # differentials.
+    # Always hiding the scrollbar (after ensuring it isn't needed) normalizes
+    # this behavior.
+    preamble << <<~HTML
+      <style>body { overflow-y: hidden; }</style>
+    HTML
+  end
+
+  doc = "#{preamble}#{h(comp.document)}"
+%>
+<iframe id="<%= comp.id %>"
+        class="v-plugin v-plugin--markup-document"
+        src="data:text/html,<%= doc %>"
+        srcdoc="<%= doc %>"
+        style="<%= style %>"
+        sandbox="allow-same-origin"
+        <% if comp.height == :auto %>data-auto-height<% end %>></iframe>
+<% if comp.height == :auto %>
+  <script>
+    window.addEventListener('resize', function() {
+      vUpdateIframeHeight('<%= comp.id %>');
+    }, {passive: true});
+    window.addEventListener('DOMContentLoaded', function() {
+      vUpdateIframeHeight('<%= comp.id %>', 2);
+    }, {passive: true, once: true});
+  </script>
+<% end %>

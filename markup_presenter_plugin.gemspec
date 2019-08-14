@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Nick Miller']
   spec.email         = ['nick@geotix.com']
 
-  spec.summary       = 'Render markup documents'
+  spec.summary       = 'Render a markup document'
   spec.homepage      = 'http://github.com/mynorth/markup_presenter_plugin'
   spec.license       = 'MIT'
 
