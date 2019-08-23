@@ -31,15 +31,5 @@
         src="data:text/html,<%= doc %>"
         srcdoc="<%= doc %>"
         style="<%= style %>"
-        sandbox="allow-same-origin"
+        <% if comp.height == :auto %>onload="javascript:voom.markup.onLoad(this);"<% end %>
         <% if comp.height == :auto %>data-auto-height<% end %>></iframe>
-<% if comp.height == :auto %>
-  <script>
-    window.addEventListener('resize', function() {
-      vUpdateIframeHeight('<%= comp.id %>');
-    }, {passive: true});
-    window.addEventListener('DOMContentLoaded', function() {
-      vUpdateIframeHeight('<%= comp.id %>', 2);
-    }, {passive: true, once: true});
-  </script>
-<% end %>
