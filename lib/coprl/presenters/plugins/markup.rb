@@ -1,6 +1,6 @@
 require_relative 'markup/component'
 
-module Voom
+module Coprl
   module Presenters
     module Plugins
       module Markup
@@ -11,18 +11,18 @@ module Voom
         end
 
         module WebClientComponents
-          def render_markup(comp, render:, components:, index:)
-            view_dir = File.join(__dir__, 'markup')
+          def view_dir_markup(pom)
+            File.join(__dir__, '../../../..', 'views', 'components')
+          end
 
+          def render_markup(comp, render:, components:, index:)
             render.call(:erb, :markup,
-                        views: view_dir,
+                        views: view_dir_markup(comp),
                         locals: { comp: comp, components: components, index: index })
           end
 
-          def render_header_markup(_pom, render:)
-            view_dir = File.join(__dir__, 'markup')
-
-            render.call(:erb, :markup_header, views: view_dir)
+          def render_header_markup(pom, render:)
+            render.call(:erb, :markup_header, views: view_dir_markup(pom))
           end
         end
       end
